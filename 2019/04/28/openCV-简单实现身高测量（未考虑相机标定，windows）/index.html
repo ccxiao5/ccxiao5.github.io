@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>openCV 简单实现身高测量（未考虑相机标定，windows） | Xiao5&#39;s Blog</title>
+  <meta name="description" content="1. OpenCV3.1.0+VS2015开发环境配置  下载OpenCV安装包（笔者下载3.1.0版本）。 环境变量配置。（opencv安装路径\build\x64\vc14\bin，注意的是x64文件夹下分为vc12和vc14两个文件夹，他们对应于VS的版本，vc8 &#x3D; Visual Studio 2005，vc9 &#x3D; Visual Studio 2008，vc10 &#x3D; Visual Stu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="openCV 简单实现身高测量（未考虑相机标定，windows）">
+<meta property="og:url" content="https://ccxiao5.github.io/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/index.html">
+<meta property="og:site_name" content="Xiao5&#39;s Blog">
+<meta property="og:description" content="1. OpenCV3.1.0+VS2015开发环境配置  下载OpenCV安装包（笔者下载3.1.0版本）。 环境变量配置。（opencv安装路径\build\x64\vc14\bin，注意的是x64文件夹下分为vc12和vc14两个文件夹，他们对应于VS的版本，vc8 &#x3D; Visual Studio 2005，vc9 &#x3D; Visual Studio 2008，vc10 &#x3D; Visual Stu">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://ccxiao5.github.io/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/1.png">
+<meta property="og:image" content="https://ccxiao5.github.io/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/2.png">
+<meta property="og:image" content="https://ccxiao5.github.io/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/3.png">
+<meta property="og:image" content="https://ccxiao5.github.io/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/4.png">
+<meta property="article:published_time" content="2019-04-28T09:44:00.000Z">
+<meta property="article:modified_time" content="2021-07-19T08:51:14.179Z">
+<meta property="article:author" content="Tigerwcheng">
+<meta property="article:tag" content="OpenCV">
+<meta property="article:tag" content="c++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ccxiao5.github.io/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/1.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://ccxiao5.github.io/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiao5&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/老虎.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    <link href="//cdn.jsdelivr.net/npm/katex@0.9.0/dist/katex.min.css" rel="stylesheet">
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/ccxiao5" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">xiao5</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">C++ engineer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/ccxiao5" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <b>与其感慨路难行，不如马上出发</b>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/OpenCV/">OpenCV</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/php/">php</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/python/">python</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B0%8F%E7%A8%8B%E5%BA%8F/">小程序</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACM/" rel="tag">ACM</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OpenCV/" rel="tag">OpenCV</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/STL/" rel="tag">STL</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Ubuntu/" rel="tag">Ubuntu</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bootstrap/" rel="tag">bootstrap</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php/" rel="tag">php</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/requirejs/" rel="tag">requirejs</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" rel="tag">小程序</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ACM/" style="font-size: 14px;">ACM</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/OpenCV/" style="font-size: 13.75px;">OpenCV</a> <a href="/tags/STL/" style="font-size: 14px;">STL</a> <a href="/tags/Ubuntu/" style="font-size: 13px;">Ubuntu</a> <a href="/tags/bootstrap/" style="font-size: 13.25px;">bootstrap</a> <a href="/tags/c/" style="font-size: 13.5px;">c++</a> <a href="/tags/javascript/" style="font-size: 13px;">javascript</a> <a href="/tags/php/" style="font-size: 13px;">php</a> <a href="/tags/python/" style="font-size: 13.25px;">python</a> <a href="/tags/requirejs/" style="font-size: 13px;">requirejs</a> <a href="/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/" style="font-size: 13px;">小程序</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/13/hello-world/" class="title">Hello World</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-13T10:01:34.483Z" itemprop="datePublished">2021-07-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/python/">python</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/07/29/pip3%E5%AE%89%E8%A3%85%E6%8A%A5%E9%94%99%EF%BC%9ACannot-uninstall-six-It-is-a-distutils-installed-project-and-thus-we-cannot-accurately-determine-which-files-belong-to-it-which-would-lead-to-only-a-partial-uninstall/" class="title">pip3安装报错：Cannot uninstall &#39;six&#39;. It is a distutils installed project and thus we cannot accurately determine which files belong to it which would lead to only a partial uninstall.</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-07-29T11:09:00.000Z" itemprop="datePublished">2019-07-29</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/python/">python</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/07/29/%E5%AE%89%E8%A3%85Python%E9%81%87%E5%88%B0%E9%97%AE%E9%A2%98%E2%80%94%E2%80%94%E6%9C%89-6-%E4%B8%AA%E8%BD%AF%E4%BB%B6%E5%8C%85%E6%B2%A1%E6%9C%89%E8%A2%AB%E5%AE%8C%E5%85%A8%E5%AE%89%E8%A3%85%E6%88%96%E5%8D%B8%E8%BD%BD%E3%80%82/" class="title">安装Python遇到问题——有 6 个软件包没有被完全安装或卸载。</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-07-29T11:01:00.000Z" itemprop="datePublished">2019-07-29</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%A0%91%E8%8E%93%E6%B4%BE/">树莓派</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/07/28/%E8%A7%A3%E5%86%B3OpenCV%E4%B8%ADPython3-import-cv2%E7%9A%84%E9%94%99%E8%AF%AF/" class="title">解决OpenCV中Python3 import cv2的错误</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-07-28T05:48:00.000Z" itemprop="datePublished">2019-07-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/OpenCV/">OpenCV</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/07/24/OpenCV%E4%B8%AD%E5%90%84%E5%87%BD%E6%95%B0%E8%A7%A3%E9%87%8A/" class="title">OpenCV中各函数解释</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-07-24T09:33:00.000Z" itemprop="datePublished">2019-07-24</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-openCV-简单实现身高测量（未考虑相机标定，windows）" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      openCV 简单实现身高测量（未考虑相机标定，windows）
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/" class="article-date">
+	  <time datetime="2019-04-28T09:44:00.000Z" itemprop="datePublished">2019-04-28</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/OpenCV/">OpenCV</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/OpenCV/" rel="tag">OpenCV</a>, <a class="article-tag-link-link" href="/tags/c/" rel="tag">c++</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 1.5k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 7(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h3 id="1-opencv310vs2015开发环境配置"><a class="markdownIt-Anchor" href="#1-opencv310vs2015开发环境配置"></a> 1. OpenCV3.1.0+VS2015开发环境配置</h3>
+<ul>
+<li><b>下载OpenCV安装包（笔者下载3.1.0版本）。</b></li>
+<li><b>环境变量配置。</b>（opencv安装路径\build\x64\vc14\bin，注意的是x64文件夹下分为vc12和vc14两个文件夹，他们对应于VS的版本，vc8 = Visual Studio 2005，vc9 = Visual Studio 2008，vc10 = Visual Studio 2010，vc11 = Visual Studio 2012，vc12 = Visual Studio 2013，vc14 = Visual Studio 2015）</li>
+<li><b>VS2015配置。</b>进入属性管理器（View—&gt;Other Windows—&gt;Property Manger，展开目录，选中Debug|Win64中的Microsoft.Cpp.x64.user，并右键点击属性（Properties）进入属性界面。）
+<ul>
+<li>包含目录配置（通用属性（Common Properties）—&gt;VC ++目录—&gt;包含目录（Include Directories））。添加路径：D:\Code\C\opencv\build\include；D:\Code\C\opencv\build\include\opencv；D:\Code\C\opencv\build\include\opencv2</li>
+<li>配置库文件目录（Library Directories）。D:\Code\C\opencv\build\x64\vc14\lib（注意VS版本）</li>
+<li>配置动态链接库（Linker(链接库)—&gt;Input(输入)—&gt;Additional Dependencies(添加依赖)）。D:\Code\C\opencv\build\x64\vc12\bin路径下的。opencv_world310.lib和opencv_world310d.lib，这里两个库文件的区别就是：opencv_world310.lib是Release模式版本，而opencv_world310d.lib是Debug模式版本。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-算法思路"><a class="markdownIt-Anchor" href="#2-算法思路"></a> 2. 算法思路</h3>
+<ul>
+<li>HOG特征提取获得定位矩形框，笔者使用SVM分类优化+多尺度检测获得带有矩形框的dst</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/******************************HOG detector************************************************/</span></span><br><span class="line">    dst = src.<span class="built_in">clone</span>();</span><br><span class="line">    vector&lt;Rect&gt; findrects, findrect;</span><br><span class="line">    HOGDescriptor HOG;</span><br><span class="line">    <span class="comment">//SVM分类器</span></span><br><span class="line">    HOG.<span class="built_in">setSVMDetector</span>(HOGDescriptor::<span class="built_in">getDefaultPeopleDetector</span>());</span><br><span class="line">    <span class="comment">//多尺度检测</span></span><br><span class="line">    HOG.<span class="built_in">detectMultiScale</span>(src, findrects, <span class="number">0</span>, <span class="built_in">Size</span>(<span class="number">4</span>, <span class="number">4</span>), <span class="built_in">Size</span>(<span class="number">0</span>, <span class="number">0</span>), <span class="number">1.05</span>, <span class="number">2</span>);</span><br><span class="line">    <span class="comment">//若rects有嵌套,则取最外面的矩形存入rect</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; findrects.<span class="built_in">size</span>(); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        Rect rect = findrects[i];</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (; j &lt; findrects.<span class="built_in">size</span>(); j++)</span><br><span class="line">            <span class="keyword">if</span> (j != i &amp;&amp; (rect &amp; findrects[j]) == rect)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">if</span> (j == findrects.<span class="built_in">size</span>())</span><br><span class="line">            findrect.<span class="built_in">push_back</span>(rect);</span><br><span class="line">    &#125;</span><br><span class="line">    Rect r;<span class="comment">//用来选中所测图像中的测量对象。</span></span><br><span class="line">    r.height = <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//框选出检测结果并选中图片测量对象</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; findrect.<span class="built_in">size</span>(); i++)</span><br><span class="line">        r = r.height &gt; findrect[i].height ? r : findrect[i];</span><br><span class="line">  <span class="comment">//HOG detector返回的矩形框比真正图像轮廓大，所以我们减少矩形框的大小来使得更符合外界边框</span></span><br><span class="line">    r.x += <span class="built_in">cvRound</span>(r.width*<span class="number">0.1</span>);</span><br><span class="line">    r.width = <span class="built_in">cvRound</span>(r.width*<span class="number">0.8</span>);</span><br><span class="line">    r.y += <span class="built_in">cvRound</span>(r.height*<span class="number">0.07</span>);</span><br><span class="line">    r.height = <span class="built_in">cvRound</span>(r.height*<span class="number">0.8</span>);</span><br><span class="line">    Scalar color = <span class="built_in">Scalar</span>(<span class="number">0</span>,<span class="number">0</span>,<span class="number">255</span>);</span><br><span class="line">    <span class="built_in">rectangle</span>(dst, r.<span class="built_in">tl</span>(), r.<span class="built_in">br</span>(), color, <span class="number">2</span>);</span><br><span class="line"><span class="comment">//    imshow(&quot;src&quot;, src);</span></span><br><span class="line"><span class="comment">//    imshow(&quot;dst&quot;, dst);</span></span><br></pre></td></tr></table></figure>
+<p>原图像和得到的dst图像<br>
+<img src="/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/1.png" width="75%"></p>
+<ul>
+<li>Grabcut算法分割</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************grabCut**********************************************/</span></span><br><span class="line">    cv::Mat mask = Mat::<span class="built_in">zeros</span>(src.<span class="built_in">size</span>(), CV_8UC1);<span class="comment">//分割后的结果</span></span><br><span class="line">    <span class="comment">//两个临时矩阵变量，作为算法的中间变量使用</span></span><br><span class="line">    cv::Mat bgModel, fgModel;</span><br><span class="line">    <span class="function">cv::Rect <span class="title">rectangle</span><span class="params">(r.tl(),r.br())</span></span>;<span class="comment">//图像的前景对象也就是矩形选中图像</span></span><br><span class="line">    <span class="comment">// GrabCut 分段</span></span><br><span class="line">    cv::<span class="built_in">grabCut</span>(src,    <span class="comment">//输入图像</span></span><br><span class="line">        mask,   <span class="comment">//分段结果</span></span><br><span class="line">        rectangle,<span class="comment">// 包含前景的矩形 </span></span><br><span class="line">        bgModel, fgModel, <span class="comment">// 前景、背景</span></span><br><span class="line">        <span class="number">1</span>,        <span class="comment">// 迭代次数</span></span><br><span class="line">        cv::GC_INIT_WITH_RECT); <span class="comment">// 用矩形</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 得到可能是前景的像素</span></span><br><span class="line">    <span class="comment">//比较函数保留值为GC_PR_FGD的像素</span></span><br><span class="line">    cv::<span class="built_in">compare</span>(mask, cv::GC_PR_FGD, mask, cv::CMP_EQ);</span><br><span class="line">    <span class="comment">// 产生输出图像</span></span><br><span class="line">    <span class="function">cv::Mat <span class="title">foreground</span><span class="params">(src.size(), CV_8UC3, cv::Scalar(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>))</span></span>;</span><br><span class="line">    <span class="comment">//背景值为 GC_BGD=0，作为掩码</span></span><br><span class="line">    src.<span class="built_in">copyTo</span>(foreground, mask);</span><br><span class="line">    <span class="built_in">imshow</span>(<span class="string">&quot;foreground&quot;</span>, foreground);</span><br></pre></td></tr></table></figure>
+<p>处理后的图像<br>
+<img src="/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/2.png" width="40%"></p>
+<ul>
+<li>BorderMatting边缘细化处理,主要思想：把前景颜色值与估计值对比，选择较小的差异值颜色代替，使得平滑最好。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/********************************BorderMatting**********************************************/</span></span><br><span class="line">    BorderMatting bm;</span><br><span class="line">    Mat rst = <span class="built_in">Mat</span>(src.<span class="built_in">size</span>(), src.<span class="built_in">type</span>());</span><br><span class="line">    Mat rstBm;</span><br><span class="line">    src.<span class="built_in">copyTo</span>(rst);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;rst.rows; i++)</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; rst.cols; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (mask.at&lt;uchar&gt;(i, j) == <span class="number">0</span>)</span><br><span class="line">                rst.at&lt;Vec3b&gt;(i, j) = <span class="built_in">Vec3b</span>(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    bm.<span class="built_in">Initialize</span>(src, mask);</span><br><span class="line">    rstBm=bm.<span class="built_in">Run</span>();</span><br><span class="line">    <span class="built_in">imshow</span>(<span class="string">&quot;bordingmatting&quot;</span>, rstBm);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>灰度化、二值化便于计算</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/******************************灰度化、二值化************************************************/</span></span><br><span class="line"></span><br><span class="line">    Mat  rstGray, rstBin;</span><br><span class="line">    <span class="built_in">cvtColor</span>(rstBm, rstGray, CV_BGR2GRAY);<span class="comment">//灰度化</span></span><br><span class="line"><span class="comment">//    imshow(&quot;灰度图&quot;, rstGray);</span></span><br><span class="line">    <span class="built_in">threshold</span>(rstGray, rstBin, <span class="number">100</span>, <span class="number">255</span>, CV_THRESH_BINARY);<span class="comment">//二值化</span></span><br><span class="line">    <span class="built_in">imshow</span>(<span class="string">&quot;二值图&quot;</span>, rstBin);</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/3.png" width="40%"><br></p>
+<ul>
+<li>最长像素距离计算。笔者一开始用欧氏距离遍历计算得到，结果处理时间过长，就采用最简单的简化方法，最长像素点距离≈最高像素点与最低像素点欧氏距离。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**********************************计算最长像素距离********************************************/</span></span><br><span class="line">    <span class="keyword">double</span> MAXPX = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> x1 = <span class="number">0</span>, y1 = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> x2 = <span class="number">0</span>, y2 = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> maxX1, maxX2, maxY1, maxY2;</span><br><span class="line">    <span class="keyword">int</span> i, j;</span><br><span class="line">    <span class="keyword">int</span> flag = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; rstBin.rows; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; rstBin.cols; j++)</span><br><span class="line">            <span class="keyword">if</span> (rstBin.at&lt;uchar&gt;(i, j) == <span class="number">255</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                x1 = i;</span><br><span class="line">                y1 = j;</span><br><span class="line">                flag = <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">if</span> (flag)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    flag = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = rstBin.rows; i &gt;= <span class="number">0</span>; i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; rstBin.cols; j++)</span><br><span class="line">            <span class="keyword">if</span> (rstBin.at&lt;uchar&gt;(i, j) == <span class="number">255</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                x2 = i;</span><br><span class="line">                y2 = j;</span><br><span class="line">                flag = <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        <span class="keyword">if</span> (flag)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; x1 &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; y1 &lt;&lt; endl;</span><br><span class="line">    cout &lt;&lt; x2 &lt;&lt; <span class="string">&quot; &quot;</span> &lt;&lt; y2 &lt;&lt; endl;</span><br><span class="line">    <span class="built_in">line</span>(src, <span class="built_in">Point</span>(y1, x1), <span class="built_in">Point</span>(y2, x2), <span class="built_in">Scalar</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">255</span>), <span class="number">3</span>);</span><br><span class="line"><span class="comment">/*    for ( i = 1; i &lt;= rstBin.rows*rstBin.cols; i++)//第一个像素点开始遍历</span></span><br><span class="line"><span class="comment">    &#123;</span></span><br><span class="line"><span class="comment">        x1 = i / rstBin.rows;</span></span><br><span class="line"><span class="comment">        y1 = !x1 ? (i - 1) : (i % x1 - 1);</span></span><br><span class="line"><span class="comment">        if (rstBin.at&lt;uchar&gt;(x1, y1) == 0)</span></span><br><span class="line"><span class="comment">            continue;</span></span><br><span class="line"><span class="comment">        for ( j = i + 1; j &lt;= rstBin.rows*rstBin.cols; j++)</span></span><br><span class="line"><span class="comment">        &#123;</span></span><br><span class="line"><span class="comment">            x2 = j / rstBin.rows;</span></span><br><span class="line"><span class="comment">            y2 = !x2 ? (j - 1) : (j % x2 - 1);</span></span><br><span class="line"><span class="comment">            if (rstBin.at&lt;uchar&gt;(x2, y2) == 255)//同为白色像素点时计算距离</span></span><br><span class="line"><span class="comment">            &#123;</span></span><br><span class="line"><span class="comment">                double distance=abs(x2 - x1) +abs(y2 - y1);//避免欧氏距离计算浪费时间</span></span><br><span class="line"><span class="comment">                if (MAXPX &lt; distance)</span></span><br><span class="line"><span class="comment">                &#123;    </span></span><br><span class="line"><span class="comment">                    maxX1 = x1;</span></span><br><span class="line"><span class="comment">                    maxX2 = x2;</span></span><br><span class="line"><span class="comment">                    maxY1 = y1;</span></span><br><span class="line"><span class="comment">                    maxY2 = y2;</span></span><br><span class="line"><span class="comment">                    MAXPX = distance;</span></span><br><span class="line"><span class="comment">                &#125;</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">        &#125;</span></span><br><span class="line"><span class="comment">    &#125;</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">    <span class="comment">/*MAXPX = sqrt((maxX1 - maxX2)*(maxX1 - maxX2) + (maxY1 - maxY2)*(maxY1 - maxY2));</span></span><br><span class="line"><span class="comment">    cout &lt;&lt; MAXPX &lt;&lt; endl;</span></span><br><span class="line"><span class="comment">    cout &lt;&lt; maxX1 &lt;&lt; &quot; &quot; &lt;&lt; maxY1 &lt;&lt; endl;</span></span><br><span class="line"><span class="comment">    cout &lt;&lt; maxX2 &lt;&lt; &quot; &quot; &lt;&lt; maxY2 &lt;&lt; endl;</span></span><br><span class="line"><span class="comment">    line(src, Point(maxY1, maxX1), Point(maxY2, maxX2), Scalar(0, 0, 255), 3);</span></span><br><span class="line"><span class="comment">    */</span><span class="built_in">imshow</span>(<span class="string">&quot;final&quot;</span>, src);</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/4.png" width="40%"><br><br>
+<b>像素与毫米的转换</b> 转换还需要知道另一个参数：</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mi>P</mi><mi>P</mi><mi>I</mi><mo stretchy="false">(</mo><mi mathvariant="normal">每</mi><mi mathvariant="normal">英</mi><mi mathvariant="normal">寸</mi><mi mathvariant="normal">多</mi><mi mathvariant="normal">少</mi><mi mathvariant="normal">像</mi><mi mathvariant="normal">素</mi><mo stretchy="false">)</mo><mi mathvariant="normal">象</mi><mi mathvariant="normal">素</mi><mi mathvariant="normal">数</mi></mrow><mrow><mi>P</mi><mi>P</mi><mi>I</mi></mrow></mfrac><mo>=</mo><mi mathvariant="normal">英</mi><mi mathvariant="normal">寸</mi><mi mathvariant="normal">数</mi></mrow><annotation encoding="application/x-tex">\dfrac{PPI(每英寸多少像素)象素数}{PPI} = 英寸数
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.113em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.427em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mord mathdefault" style="margin-right:0.07847em;">I</span><span class="mopen">(</span><span class="mord cjk_fallback">每</span><span class="mord cjk_fallback">英</span><span class="mord cjk_fallback">寸</span><span class="mord cjk_fallback">多</span><span class="mord cjk_fallback">少</span><span class="mord cjk_fallback">像</span><span class="mord cjk_fallback">素</span><span class="mclose">)</span><span class="mord cjk_fallback">象</span><span class="mord cjk_fallback">素</span><span class="mord cjk_fallback">数</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0em;vertical-align:0em;"></span><span class="mord cjk_fallback">英</span><span class="mord cjk_fallback">寸</span><span class="mord cjk_fallback">数</span></span></span></span></span></p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi mathvariant="normal">英</mi><mi mathvariant="normal">寸</mi><mi mathvariant="normal">数</mi><mo>×</mo><mn>25.4</mn><mo>=</mo><mi mathvariant="normal">毫</mi><mi mathvariant="normal">米</mi><mi mathvariant="normal">数</mi></mrow><annotation encoding="application/x-tex">英寸数\times 25.4 = 毫米数
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord cjk_fallback">英</span><span class="mord cjk_fallback">寸</span><span class="mord cjk_fallback">数</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">5</span><span class="mord">.</span><span class="mord">4</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0em;vertical-align:0em;"></span><span class="mord cjk_fallback">毫</span><span class="mord cjk_fallback">米</span><span class="mord cjk_fallback">数</span></span></span></span></span></p>
+<p>&emsp;&emsp;笔者设定系统参数焦距(3.5mm)不会变动（图为35mm焦距所拍)物距1.1m，ppi：400（笔者电脑PPI260）那么身高大概为：</p><br> 
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mfrac><mrow><mfrac><mrow><mo stretchy="false">(</mo><mo stretchy="false">(</mo><mn>790</mn><mo>−</mo><mn>152</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup><mo>+</mo><mo stretchy="false">(</mo><mn>281</mn><mo>−</mo><mn>247</mn><msup><mo stretchy="false">)</mo><mn>2</mn></msup><msup><mo stretchy="false">)</mo><mfrac><mn>1</mn><mn>2</mn></mfrac></msup></mrow><mn>260</mn></mfrac><mo>×</mo><mn>25.4</mn></mrow><mn>35</mn></mfrac><mo>=</mo><mn>1.71</mn><mi>m</mi></mrow><annotation encoding="application/x-tex">\dfrac{\dfrac{((790-152)^2+(281-247)^2)^\dfrac{1}{2}}{260}\times 25.4}{35}=1.71m
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:4.675190000000001em;vertical-align:-0.686em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.9891900000000007em;"><span style="top:-4.22719em;"><span class="pstrut" style="height:4.91319em;"></span><span class="mord"><span class="mord">3</span><span class="mord">5</span></span></span><span style="top:-5.143190000000001em;"><span class="pstrut" style="height:4.91319em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-5.98919em;"><span class="pstrut" style="height:4.91319em;"></span><span class="mord"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.9131900000000006em;"><span style="top:-3.5501900000000006em;"><span class="pstrut" style="height:4.236190000000001em;"></span><span class="mord"><span class="mord">2</span><span class="mord">6</span><span class="mord">0</span></span></span><span style="top:-4.466190000000001em;"><span class="pstrut" style="height:4.236190000000001em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-4.91319em;"><span class="pstrut" style="height:4.236190000000001em;"></span><span class="mord"><span class="mopen">(</span><span class="mopen">(</span><span class="mord">7</span><span class="mord">9</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">1</span><span class="mord">5</span><span class="mord">2</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mopen">(</span><span class="mord">2</span><span class="mord">8</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">2</span><span class="mord">4</span><span class="mord">7</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:2.2361900000000006em;"><span style="top:-4.23619em;margin-right:0.05em;"><span class="pstrut" style="height:3.37644em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord sizing reset-size3 size6 mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.37644em;"><span style="top:-2.248em;"><span class="pstrut" style="height:3em;"></span><span class="mord mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.2255000000000003em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.732em;"><span class="pstrut" style="height:3em;"></span><span class="mord mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.752em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mord">2</span><span class="mord">5</span><span class="mord">.</span><span class="mord">4</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">.</span><span class="mord">7</span><span class="mord">1</span><span class="mord mathdefault">m</span></span></span></span></span></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://ccxiao5.github.io/2019/04/28/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E6%9C%AA%E8%80%83%E8%99%91%E7%9B%B8%E6%9C%BA%E6%A0%87%E5%AE%9A%EF%BC%8Cwindows%EF%BC%89/" title="openCV 简单实现身高测量（未考虑相机标定，windows）" target="_blank" rel="external">https://ccxiao5.github.io/2019/04/28/openCV-简单实现身高测量（未考虑相机标定，windows）/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/ccxiao5" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/ccxiao5" target="_blank"><span class="text-dark">xiao5</span><small class="ml-1x">C++ engineer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/06/11/openCV-%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0%E8%BA%AB%E9%AB%98%E6%B5%8B%E9%87%8F%EF%BC%88%E4%BA%8C/" title="openCV 简单实现身高测量（二)"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/04/26/php%E8%B0%83%E7%94%A8c-c-%E6%97%B6-passthru-%E8%A2%AB%E7%A6%81%E7%94%A8%E9%97%AE%E9%A2%98/" title="php调用c/c++时 passthru()被禁用问题"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/ccxiao5" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2021 Tigerwcheng
+        
+        <div class="publishby">
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
