@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <link href="https://cdn.bootcss.com/KaTeX/0.7.1/katex.min.css" rel="stylesheet">
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>ACM常用STL | Xiao5&#39;s Blog</title>
+  <meta name="description" content="stack  12345678910111213141516stack&lt;int&gt;st;&#x2F;&#x2F;栈st，用于存放int型数据  st.push(3);&#x2F;&#x2F;将3入栈  st.push(2);&#x2F;&#x2F;将2入栈  st.pop();&#x2F;&#x2F;栈顶2出栈  int Top &#x3D; st.top();&#x2F;&#x2F;获取栈顶元素,即3  int Size &#x3D; st.size();&#x2F;&#x2F;求栈中的元素个数  bool isEmpt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ACM常用STL">
+<meta property="og:url" content="https://ccxiao5.github.io/2021/07/16/ACM%E5%B8%B8%E7%94%A8STL/index.html">
+<meta property="og:site_name" content="Xiao5&#39;s Blog">
+<meta property="og:description" content="stack  12345678910111213141516stack&lt;int&gt;st;&#x2F;&#x2F;栈st，用于存放int型数据  st.push(3);&#x2F;&#x2F;将3入栈  st.push(2);&#x2F;&#x2F;将2入栈  st.pop();&#x2F;&#x2F;栈顶2出栈  int Top &#x3D; st.top();&#x2F;&#x2F;获取栈顶元素,即3  int Size &#x3D; st.size();&#x2F;&#x2F;求栈中的元素个数  bool isEmpt">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-07-16T06:07:26.000Z">
+<meta property="article:modified_time" content="2021-07-16T07:51:05.738Z">
+<meta property="article:author" content="Tigerwcheng">
+<meta property="article:tag" content="ACM">
+<meta property="article:tag" content="C++">
+<meta property="article:tag" content="STL">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://ccxiao5.github.io/2021/07/16/ACM%E5%B8%B8%E7%94%A8STL/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Xiao5&#39;s Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/老虎.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/ccxiao5" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">xiao5</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">C++ engineer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/ccxiao5" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <b>与其感慨路难行，不如马上出发</b>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/C/">C++</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/web/">web</a><span class="category-list-count">3</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/ACM/" rel="tag">ACM</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/C/" rel="tag">C++</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/STL/" rel="tag">STL</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bootstrap/" rel="tag">bootstrap</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/javascript/" rel="tag">javascript</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/requirejs/" rel="tag">requirejs</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/ACM/" style="font-size: 14px;">ACM</a> <a href="/tags/C/" style="font-size: 14px;">C++</a> <a href="/tags/STL/" style="font-size: 14px;">STL</a> <a href="/tags/bootstrap/" style="font-size: 13.5px;">bootstrap</a> <a href="/tags/javascript/" style="font-size: 13px;">javascript</a> <a href="/tags/requirejs/" style="font-size: 13px;">requirejs</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/07/">七月 2021</a><span class="archive-list-count">17</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/16/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E8%87%AA%E5%AE%9A%E4%B9%89%E7%BB%84%E4%BB%B6/" class="title">微信小程序开发---自定义组件</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-16T06:09:11.000Z" itemprop="datePublished">2021-07-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/16/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E8%A7%86%E5%9B%BE%E5%B1%82-View/" class="title">微信小程序开发---视图层(View)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-16T06:08:57.000Z" itemprop="datePublished">2021-07-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/16/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E9%80%BB%E8%BE%91%E5%B1%82-App-Service/" class="title">微信小程序开发---逻辑层(App Service)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-16T06:08:38.000Z" itemprop="datePublished">2021-07-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/16/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%90%84%E4%BB%A3%E7%A0%81%E6%96%87%E4%BB%B6%E7%AE%80%E4%BB%8B/" class="title">微信小程序开发---各代码文件简介</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-16T06:08:10.000Z" itemprop="datePublished">2021-07-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2021/07/16/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" class="title">微信小程序开发----微信开发者工具使用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2021-07-16T06:07:56.000Z" itemprop="datePublished">2021-07-16</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-ACM常用STL" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ACM常用STL
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2021/07/16/ACM%E5%B8%B8%E7%94%A8STL/" class="article-date">
+	  <time datetime="2021-07-16T06:07:26.000Z" itemprop="datePublished">2021-07-16</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/C/">C++</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/ACM/" rel="tag">ACM</a>, <a class="article-tag-link-link" href="/tags/C/" rel="tag">C++</a>, <a class="article-tag-link-link" href="/tags/STL/" rel="tag">STL</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2021/07/16/ACM%E5%B8%B8%E7%94%A8STL/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 3.1k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 14(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <ol>
+<li>stack</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">stack</span>&lt;<span class="keyword">int</span>&gt;st;<span class="comment">//栈st，用于存放int型数据  </span></span><br><span class="line">st.push(<span class="number">3</span>);<span class="comment">//将3入栈  </span></span><br><span class="line">st.push(<span class="number">2</span>);<span class="comment">//将2入栈  </span></span><br><span class="line">st.pop();<span class="comment">//栈顶2出栈  </span></span><br><span class="line"><span class="keyword">int</span> Top = st.top();<span class="comment">//获取栈顶元素,即3  </span></span><br><span class="line"><span class="keyword">int</span> Size = st.size();<span class="comment">//求栈中的元素个数  </span></span><br><span class="line"><span class="keyword">bool</span> isEmpty = st.empty(); <span class="comment">//栈中元素是否为空，1表示空，0表示非空  </span></span><br><span class="line">  </span><br><span class="line"><span class="built_in">stack</span>&lt;T&gt;st;  <span class="comment">// T是存放数据的类型，可以是int, double等，也可以是自定义的结构体类型</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">*struct Node  </span></span><br><span class="line"><span class="comment">*&#123;  </span></span><br><span class="line"><span class="comment">*   int x,y;  </span></span><br><span class="line"><span class="comment">*&#125;;  </span></span><br><span class="line"><span class="comment">stack&lt;Node&gt; st;  </span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>queue</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">queue</span>&lt;<span class="keyword">int</span>&gt;que;<span class="comment">//队列que,存放int型数据  </span></span><br><span class="line">que.push(<span class="number">3</span>);<span class="comment">//将3入队列  </span></span><br><span class="line">que.push(<span class="number">2</span>);<span class="comment">//将2入队列  </span></span><br><span class="line">que.pop();<span class="comment">//队首3出队列  </span></span><br><span class="line"><span class="keyword">int</span> Front = que.front();<span class="comment">//获取队首元素  </span></span><br><span class="line"><span class="keyword">int</span> Size = que.size();<span class="comment">//队列中元素个数  </span></span><br><span class="line"><span class="keyword">bool</span> isEmpty = que.empty(); <span class="comment">//是否为空  </span></span><br><span class="line">  </span><br><span class="line"><span class="built_in">queue</span>&lt;T&gt;que;  <span class="comment">// T是存放数据的类型，可以是int, double等，也可以是自定义的结构体类型.</span></span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>priority_queue<br>
+优先队列中的元素按照一定的优先级进行排列，对于int型的元素，默认是<b>从大到小</b>进行排列的，队首为最大元素。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> len = <span class="number">5</span>;  </span><br><span class="line"><span class="keyword">int</span> a[len] = &#123;<span class="number">3</span>, <span class="number">5</span>, <span class="number">9</span>, <span class="number">6</span>, <span class="number">2</span>&#125;;  </span><br><span class="line"><span class="built_in">priority_queue</span>&lt;<span class="keyword">int</span>&gt; q;  </span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; ++ i)  </span><br><span class="line">&#123;  </span><br><span class="line">    q.push(a[i]);  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; ++ i)  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt; q.top() &lt;&lt;<span class="built_in">endl</span>;  </span><br><span class="line">    q.pop();  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出的元素依次为 9 6 5 3 2<br>
+如果要按照从小到大排列，把<code>priority_queue&lt;int&gt;q;</code>这条语句换成<code>priority_queue&lt;int,vector&lt;int&gt;,greater&lt;int&gt;&gt;q;</code>就可以实现。<br>
+另外我们可以根据需求，自己定义优先级，对<code>&lt;</code>符号进行重载，使得队列中的元素按照一定的顺序排列，假设我们定义一个操作系统中作业的结构体，里面有两个元素，一个是作业名<code>char name[5]</code>; 一个是到达时间intarriveTime; 把作业对象放到优先队列里面，要求在优先队列按作业到达时间从小到大排列，即到达时间最小的作业在队首.</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Job</span> //定义作业结构体  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">5</span>];<span class="comment">//作业名  </span></span><br><span class="line">    <span class="keyword">int</span> arriveTime;<span class="comment">//到达时间  </span></span><br><span class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> Job another)<span class="keyword">const</span>&#123;<span class="comment">//如果当前作业到达时间大于另一个，则当前作业优先级小  </span></span><br><span class="line">        <span class="keyword">if</span>(arriveTime &gt; another.arriveTime)  </span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;job[<span class="number">3</span>];  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    <span class="built_in">strcpy</span>(job[<span class="number">0</span>].name, <span class="string">&quot;no1&quot;</span>);  </span><br><span class="line">    <span class="built_in">strcpy</span>(job[<span class="number">1</span>].name, <span class="string">&quot;no2&quot;</span>);  </span><br><span class="line">    <span class="built_in">strcpy</span>(job[<span class="number">2</span>].name, <span class="string">&quot;no3&quot;</span>);  </span><br><span class="line">    job[<span class="number">0</span>].arriveTime = <span class="number">2</span>;  </span><br><span class="line">    job[<span class="number">1</span>].arriveTime = <span class="number">1</span>;  </span><br><span class="line">    job[<span class="number">2</span>].arriveTime = <span class="number">3</span>;  </span><br><span class="line">  </span><br><span class="line">    <span class="built_in">priority_queue</span>&lt;Job&gt; que;  </span><br><span class="line">    que.push(job[<span class="number">0</span>]);  </span><br><span class="line">    que.push(job[<span class="number">1</span>]);  </span><br><span class="line">    que.push(job[<span class="number">2</span>]);  </span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; ++ i)  </span><br><span class="line">    &#123;  </span><br><span class="line">        Job tempJob = que.top();  </span><br><span class="line">        que.pop();  </span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt; tempJob.name &lt;&lt;<span class="string">&quot;  &quot;</span>&lt;&lt;tempJob.arriveTime&lt;&lt;<span class="built_in">endl</span>;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">no2 1</span><br><span class="line">no1 2</span><br><span class="line">no3 3</span><br><span class="line">```  </span><br><span class="line">实现了优先队列中的作业按照到达时间排序.</span><br><span class="line"></span><br><span class="line">4. vector</span><br><span class="line">vector是一种容器，可以看做是动态的数组.</span><br><span class="line">```c</span><br><span class="line">vector&lt;int&gt;vec;  </span><br><span class="line">vec.push_back(2);//尾部插入数字2,即 vec[0]=2  </span><br><span class="line">vec.push_back(4);//尾部插入数字4,即 vec[1]=4  </span><br><span class="line">int Size = vec.size();//容器中存放数字的个数  </span><br><span class="line">cout&lt;&lt; vec[1] &lt;&lt;endl;//访问第二个数字，即4  </span><br><span class="line">  </span><br><span class="line">for(int i = 0; i &lt; vec.size(); ++ i)//按照下标遍历元素,此时vec[0]=2  vec[1]=4  </span><br><span class="line">&#123;  </span><br><span class="line">    cout&lt;&lt; vec[i] &lt;&lt; &quot; &quot;;  </span><br><span class="line">&#125;  </span><br><span class="line">cout&lt;&lt;endl;  </span><br><span class="line">  </span><br><span class="line">vector&lt;int&gt;::iterator it;//按照迭代器遍历元素  </span><br><span class="line">for(it = vec.begin(); it != vec.end(); ++ it)  </span><br><span class="line">&#123;  </span><br><span class="line">    cout&lt;&lt; *it &lt;&lt;&quot; &quot;;  </span><br><span class="line">&#125;  </span><br><span class="line">cout&lt;&lt;endl;  </span><br><span class="line">  </span><br><span class="line">vec.insert(vec.begin() + 1, 6);//在第二个位置上插入元素6，即vec[1]=6  </span><br><span class="line">vec.erase(vec.begin() + 1);//删除第二个位置上的元素  </span><br><span class="line">vec.clear();//把容器中的元素全部清除</span><br></pre></td></tr></table></figure>
+<p>  另外也可以定义二维动态数组即<code>vector&lt;int&gt;vec[2]</code>,也就是两个容器，用它可以很方便的保存有向图的邻接表,即<code>vec[i]</code>中存放的是与第i个顶点相邻的顶点（从顶点i出发），.其操作只要把上述代码中的vec改成<code>vec[i]</code>就可以。<br>
+5. set<br>
+<b>set这种容器里面存放元素是唯一的，即不可能两个相同的数都存在set里面，</b>set的效率比较高，起内部采用了高效的平衡检索二叉树：红黑树。插入的元素按从小到大自动排好序，第一个元素为最小值。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt;st;<span class="comment">//容器中存放int型数据  </span></span><br><span class="line">st.insert(<span class="number">2</span>);<span class="comment">//插入元素2  </span></span><br><span class="line">st.insert(<span class="number">1</span>);  </span><br><span class="line">st.insert(<span class="number">3</span>);  </span><br><span class="line">st.insert(<span class="number">8</span>);  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">int</span> Size = st.size();<span class="comment">//容器中元素个数  </span></span><br><span class="line"><span class="keyword">bool</span> isEmpty = st.empty();<span class="comment">//元素是否为空  </span></span><br><span class="line"><span class="keyword">int</span> has1 = st.count(<span class="number">1</span>);<span class="comment">//1这个元素是否在set中 st.count()不是1就是0  </span></span><br><span class="line"><span class="keyword">int</span> has2 = st.count(<span class="number">6</span>);<span class="comment">//6这个元素是否在set中，has1值为1  has2值为0  </span></span><br><span class="line">st.erase(<span class="number">1</span>);<span class="comment">//在容器中删除1这个元素  </span></span><br><span class="line"><span class="keyword">bool</span> inSet = (st.find(<span class="number">-2</span>)!= st.end());<span class="comment">//-2这个元素是否在set中  </span></span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;*st.lower_bound(<span class="number">1</span>)&lt;&lt;<span class="built_in">endl</span>;<span class="comment">//返回set中第一个大于等于1的数  </span></span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;*st.upper_bound(<span class="number">1</span>)&lt;&lt;<span class="built_in">endl</span>;<span class="comment">//返回set中第一个大于1的数  </span></span><br><span class="line">  </span><br><span class="line"><span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt;:: iterator it;<span class="comment">//遍历set容器，输出 1 2 3  </span></span><br><span class="line"><span class="keyword">for</span>(it = st.begin(); it != st.end(); ++ it)  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt; *it &lt;&lt;<span class="string">&quot;  &quot;</span>;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;  </span><br><span class="line">  </span><br><span class="line">st.clear();<span class="comment">//清空set中的元素</span></span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li>map<br>
+map是一种映射关系，一对一，第一个为关键字（first），第二个为键值(second)，关键字唯一，map中的元素按关键字有序. 实际应用中要考虑好关键字和键值代表的意义，灵活运用。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">map</span>&lt;<span class="built_in">string</span>, <span class="keyword">int</span>&gt; mp; <span class="comment">//关键字为string类型，键值为int 类型，我们可以用来表示某一个符  </span></span><br><span class="line"><span class="comment">//串str出现的次数,int型键值默认为0  </span></span><br><span class="line"><span class="built_in">cout</span>&lt;&lt; mp[“hello”] &lt;&lt;<span class="built_in">endl</span>; <span class="comment">//输出”hello”这个字符串出现的次数，这里原来map是空的，但  </span></span><br><span class="line"><span class="comment">//但是我们输出了一下以后，mp的元素个数自动变成了1，但是”hello”对应的键值仍然为0  </span></span><br><span class="line">  </span><br><span class="line">mp.clear();<span class="comment">//清空元素  </span></span><br><span class="line">mp.insert(<span class="built_in">make_pair</span>(<span class="string">&quot;hello&quot;</span>,<span class="number">1</span>));<span class="comment">//插入键值对，代表初始的时候&quot;hello&quot;出现的次数为1  </span></span><br><span class="line">mp.insert(<span class="built_in">make_pair</span>(<span class="string">&quot;world&quot;</span>,<span class="number">3</span>));<span class="comment">//插入键值对，初始的时候&quot;world&quot;出现的次数为3  </span></span><br><span class="line">mp.insert(<span class="built_in">make_pair</span>(<span class="string">&quot;apple&quot;</span>,<span class="number">1</span>));<span class="comment">//插入键值对，初始的时候&quot;apple”出现的次数为1  </span></span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;mp.size()&lt;&lt;<span class="built_in">endl</span>;<span class="comment">//map中的元素个数，这里输出3  </span></span><br><span class="line">  </span><br><span class="line"><span class="built_in">map</span>&lt;<span class="built_in">string</span>, <span class="keyword">int</span>&gt;:: iterator it;<span class="comment">//遍历map  </span></span><br><span class="line"><span class="keyword">for</span>(it = mp.begin(); it!= mp.end(); ++ it)  </span><br><span class="line">&#123;  </span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;it-&gt;first&lt;&lt;<span class="string">&quot;  &quot;</span>&lt;&lt;it-&gt;second&lt;&lt;<span class="built_in">endl</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apple 1</span><br><span class="line">hello 1</span><br><span class="line">world 3</span><br></pre></td></tr></table></figure>
+<p>可以发现元素是按关键字从小到大排好序的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cout</span>&lt;&lt; mp[“hello”]&lt;&lt;end;<span class="comment">//查看”hello”出现的次数  </span></span><br><span class="line">mp[“hello”] ++ ;<span class="comment">//”hello”出现的次数+1  </span></span><br><span class="line">  </span><br><span class="line"><span class="keyword">bool</span> inMap = mp.count(“hello”); <span class="comment">//”hello”是否在map中，返回0或1  </span></span><br><span class="line">inMap = (mp.find(<span class="string">&quot;hello&quot;</span>) != mp.end()); <span class="comment">//”hello”是否在map中，返回0或1  </span></span><br><span class="line">  </span><br><span class="line"><span class="keyword">for</span>(it = mp.begin(); it != mp.end(); ++ it)<span class="comment">//查找到”hello”,然后删除该元素  </span></span><br><span class="line">&#123;  </span><br><span class="line">    <span class="keyword">if</span>(it-&gt;first == <span class="string">&quot;hello&quot;</span>)  </span><br><span class="line">    &#123;  </span><br><span class="line">        mp.erase(it);  </span><br><span class="line">        <span class="keyword">break</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ol start="7">
+<li>sort<br>
+头文件#include<algorithm><br>
+  使用sort可以很方便的对数组进行进行排序,它可以传两个或三个参数。第一个参数是要排序的区间首地址，第二个参数是区间尾地址的下一个地址，也就是排序的区间为[a,b),比如有一个数组 int a[5], 使得a[0] 到a[4]从小到大有序，只要写 sort(a, a + 5)就可以了，通用sort(a, a+ n);// n为元素个数。sort内部采用的是快速排序，一般情况下效率很高.</algorithm></li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> n = <span class="number">3</span>;  </span><br><span class="line"><span class="keyword">int</span> arr[n] = &#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>&#125;;  </span><br><span class="line">sort(arr,arr+n);  </span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; ++ i)  </span><br><span class="line"><span class="built_in">cout</span>&lt;&lt; arr[i] &lt;&lt;<span class="built_in">endl</span>;  </span><br></pre></td></tr></table></figure>
+<p>  另外，我们也可以按照自己的需求进行元素排序，元素可以是结构体，这里就用到了第三个参数，比较函数，告诉计算机按照什么顺序进行排序。<br>
+比如：按照从大到小排序</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span><span class="comment">//定义比较函数，从大到小  </span></span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    <span class="keyword">if</span>(a &gt;= b)  </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">&#125;</span><br><span class="line">```  </span><br><span class="line">主函数中： sort(arr, arr+n,cmp);  </span><br><span class="line">再比如下面结构体，要按照学生的年龄从小到大排序.</span><br><span class="line">```c</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Student</span>  </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line">    <span class="keyword">int</span> age; <span class="comment">//年龄  </span></span><br><span class="line">    <span class="built_in">string</span> name;<span class="comment">//姓名  </span></span><br><span class="line">&#125;student[<span class="number">3</span>];  </span><br><span class="line">  </span><br><span class="line"><span class="function"><span class="keyword">bool</span> <span class="title">cmp</span><span class="params">(Student a, Student b)</span>  </span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">    <span class="keyword">if</span>(a.age &lt;= b.age)  </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;  </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line">student[<span class="number">0</span>].name = <span class="string">&quot;aa&quot;</span>;student[<span class="number">0</span>].age = <span class="number">15</span>;  </span><br><span class="line">student[<span class="number">1</span>].name = <span class="string">&quot;bb&quot;</span>;student[<span class="number">1</span>].age = <span class="number">10</span>;  </span><br><span class="line">student[<span class="number">2</span>].name = <span class="string">&quot;cc&quot;</span>;student[<span class="number">2</span>].age = <span class="number">8</span>;  </span><br><span class="line">sort(student, student+<span class="number">3</span>, cmp);  </span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; ++ i)  </span><br><span class="line"><span class="built_in">cout</span>&lt;&lt; student[i].name &lt;&lt;<span class="string">&quot;  &quot;</span>&lt;&lt;student[i].age&lt;&lt;<span class="built_in">endl</span>;</span><br></pre></td></tr></table></figure>
+<p>输出：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cc  8</span><br><span class="line">bb 10</span><br><span class="line">aa 15</span><br></pre></td></tr></table></figure>
+<ol start="8">
+<li>cmath</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cout</span>&lt;&lt; log2(<span class="number">8</span>) &lt;&lt;<span class="built_in">endl</span>;  <span class="comment">//输出3 , 因为2的3次方为8  </span></span><br><span class="line"><span class="built_in">cout</span>&lt;&lt; <span class="built_in">log10</span>(<span class="number">100</span>) &lt;&lt;<span class="built_in">endl</span>;  <span class="comment">//输出2，因为10的2次方为100  </span></span><br><span class="line"><span class="built_in">cout</span>&lt;&lt; <span class="built_in">log</span>(<span class="number">20</span>) &lt;&lt;<span class="built_in">endl</span>;  <span class="comment">//计算 ln(20)的值</span></span><br></pre></td></tr></table></figure>
+<p>补充：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//vector-----------------  </span></span><br><span class="line">   <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;v;  </span><br><span class="line">   v.erase(v.begin() + <span class="number">2</span>);<span class="comment">//删除第2个元素，从0开始计数  </span></span><br><span class="line">   v.erase(v.begin() + <span class="number">1</span>, v.begin() + <span class="number">5</span>);<span class="comment">//删除第1到第5个元素  </span></span><br><span class="line">   sort(v.begin(), v.end());<span class="comment">//元素排序  </span></span><br><span class="line">   <span class="comment">//sort(v.begin(), v.end(), cmp);//自定义排序规则，cmp函数自定义  </span></span><br><span class="line">   reverse(v.begin(), v.end());  </span><br><span class="line">  </span><br><span class="line">   <span class="comment">//string-----------------  </span></span><br><span class="line">   <span class="built_in">string</span> s;  </span><br><span class="line">   s = <span class="string">&quot;123456&quot;</span>;  </span><br><span class="line">   <span class="built_in">string</span>::iterator it;  </span><br><span class="line">   it = s.begin();  </span><br><span class="line">   s.insert(it + <span class="number">1</span>, <span class="string">&#x27;p&#x27;</span>);<span class="comment">// s 变为 1p23456  </span></span><br><span class="line">   s.erase(it + <span class="number">3</span>);<span class="comment">//删除第3个字符，从0开始计数  </span></span><br><span class="line">   s = <span class="string">&quot;abc123456&quot;</span>;  </span><br><span class="line">   s.replace(<span class="number">3</span>, <span class="number">3</span>, <span class="string">&quot;good&quot;</span>);<span class="comment">//从第3个开始，将连续的3个字符替换为&quot;good&quot;,即将123替换为good  </span></span><br><span class="line">   reverse(s.begin(), s.end());  </span><br><span class="line">  </span><br><span class="line">   <span class="comment">//set--------------------  </span></span><br><span class="line">   <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt;st;  </span><br><span class="line">   <span class="comment">//反向遍历，从大到小  </span></span><br><span class="line">   <span class="built_in">set</span>&lt;<span class="keyword">int</span>&gt;::reverse_iterator rit;<span class="comment">//定义反向迭代器  </span></span><br><span class="line">   <span class="keyword">for</span>(rit = st.rbegin(); rit != st.rend(); rit ++)  </span><br><span class="line">   &#123;  </span><br><span class="line">       <span class="built_in">cout</span> &lt;&lt; *rit &lt;&lt; <span class="built_in">endl</span>;  </span><br><span class="line">   &#125;  </span><br><span class="line">  </span><br><span class="line">   <span class="comment">//multiset--------------里面值可以重复  </span></span><br><span class="line">   <span class="built_in">multiset</span>&lt;<span class="keyword">int</span>&gt; ms;  </span><br><span class="line">   <span class="keyword">int</span> n = ms.erase(<span class="number">3</span>); <span class="comment">//删除里面所有的3，返回删除元素总个数  </span></span><br><span class="line">   <span class="built_in">multiset</span>&lt;<span class="keyword">int</span>&gt;::iterator it;  </span><br><span class="line">   it = ms.find(<span class="number">3</span>);  </span><br><span class="line">   <span class="keyword">if</span>(it != ms.end())<span class="comment">//找到了3这个元素  </span></span><br><span class="line">   &#123;  </span><br><span class="line">       <span class="built_in">cout</span> &lt;&lt; *it &lt;&lt;<span class="built_in">endl</span>;  </span><br><span class="line">   &#125;  </span><br><span class="line">   <span class="keyword">else</span>  </span><br><span class="line">   &#123;  </span><br><span class="line">       <span class="built_in">cout</span>&lt;&lt; <span class="string">&quot;not find it&quot;</span>&lt;&lt;<span class="built_in">endl</span>;  </span><br><span class="line">   &#125;  </span><br><span class="line">  </span><br><span class="line">   <span class="comment">//map-----------键值--&gt;映照数据  </span></span><br><span class="line">   <span class="built_in">map</span>&lt;<span class="keyword">int</span>&gt; mp;  </span><br><span class="line">   mp.erase(<span class="number">2</span>);<span class="comment">//删除键值为2的元素  </span></span><br><span class="line">   <span class="built_in">map</span>&lt;<span class="keyword">int</span>&gt;::iterator it;  </span><br><span class="line">   it = mp.find(<span class="number">2</span>);<span class="comment">//查找键值  </span></span><br><span class="line">   <span class="keyword">if</span>(it != mp.end())<span class="comment">//找到了  </span></span><br><span class="line">   &#123;  </span><br><span class="line">       <span class="built_in">cout</span> &lt;&lt; (*it).first &lt;&lt; (*it).second &lt;&lt;<span class="built_in">endl</span>;  </span><br><span class="line">   &#125;  </span><br><span class="line">  </span><br><span class="line">   <span class="class"><span class="keyword">struct</span> <span class="title">Info</span>  </span></span><br><span class="line"><span class="class">   &#123;</span>  </span><br><span class="line">       <span class="built_in">string</span> name;  </span><br><span class="line">       <span class="keyword">float</span> score;  </span><br><span class="line">       <span class="comment">//重载&#x27;&lt;&#x27;操作符，自定义排序规则，在map中  </span></span><br><span class="line">       <span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> Info &amp;a) <span class="keyword">const</span>  </span><br><span class="line">       &#123;  </span><br><span class="line">           <span class="comment">//按score从小到大排序  </span></span><br><span class="line">           <span class="keyword">return</span> a.score &lt; score;  </span><br><span class="line">       &#125;  </span><br><span class="line">   &#125;;  </span><br><span class="line">  </span><br><span class="line">   <span class="built_in">map</span>&lt;Info, <span class="keyword">int</span>&gt; mmp;  </span><br><span class="line">  </span><br><span class="line">   <span class="comment">//multimap------------允许键值相同的存在  </span></span><br><span class="line">   <span class="built_in">multimap</span>&lt;<span class="built_in">string</span>, <span class="keyword">double</span>&gt;m;  </span><br><span class="line">   m.insert(<span class="built_in">pair</span>&lt;<span class="built_in">string</span>, <span class="keyword">double</span>&gt; (<span class="string">&quot;jack&quot;</span>, <span class="number">20.4</span>));  </span><br><span class="line">   m.insert(<span class="built_in">pair</span>&lt;<span class="built_in">string</span>, <span class="keyword">double</span>&gt; (<span class="string">&quot;jack&quot;</span>, <span class="number">34.1</span>));  </span><br><span class="line">   m.erase(<span class="string">&quot;jack&quot;</span>);<span class="comment">//删除键值等于&quot;jack&quot;的元素  </span></span><br><span class="line">   <span class="comment">//find()函数只返回重复键值中的第一个元素的迭代器位置  </span></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">   <span class="comment">//deque-------------双端队列  </span></span><br><span class="line">   push_back()方法在尾部插入元素，不断扩张队列  </span><br><span class="line">   push_front()和insert()在首部和中间位置插入元素，只是将原位置上的元素值覆盖，不会增加新元素  </span><br><span class="line">   <span class="built_in">deque</span>&lt;<span class="keyword">int</span>&gt; d;  </span><br><span class="line">   d.push_back(<span class="number">1</span>);  </span><br><span class="line">   d.push_back(<span class="number">2</span>);  </span><br><span class="line">   d.push_back(<span class="number">3</span>);  </span><br><span class="line">   d.insert(d.begin() + <span class="number">1</span>, <span class="number">88</span>);  </span><br><span class="line">   <span class="built_in">cout</span> &lt;&lt; d[<span class="number">0</span>] &lt;&lt; d[<span class="number">1</span>] &lt;&lt; d[<span class="number">2</span>] &lt;&lt;<span class="built_in">endl</span>; <span class="comment">//输出 1 88 3  </span></span><br><span class="line">   d.pop_front();<span class="comment">//头部删除元素  </span></span><br><span class="line">   d.pop_back();<span class="comment">//尾部删除元素  </span></span><br><span class="line">   d.erase(d.begin() + <span class="number">1</span>);  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">   <span class="comment">//list--------------链表  </span></span><br><span class="line">   <span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt; l;  </span><br><span class="line">   l.push_back(<span class="number">2</span>);  </span><br><span class="line">   l.push_back(<span class="number">1</span>);  </span><br><span class="line">   l.push_back(<span class="number">5</span>);<span class="comment">//链表尾部插入元素，链表自动扩张  </span></span><br><span class="line">   l.push_front(<span class="number">8</span>);<span class="comment">//链表头部插入元素，链表自动扩张  </span></span><br><span class="line">   <span class="built_in">list</span>&lt;<span class="keyword">int</span>&gt;::iterator it;  </span><br><span class="line">   it = l.begin();  </span><br><span class="line">   it ++;<span class="comment">//注意链表的迭代器只能进行 ++ 或者 -- ，不能 + n  </span></span><br><span class="line">   l.insert(it, <span class="number">20</span>);  </span><br><span class="line">   <span class="keyword">for</span>(it = l.begin(); it != l.end(); it ++)  </span><br><span class="line">   &#123;  </span><br><span class="line">       <span class="built_in">cout</span> &lt;&lt; *it &lt;&lt;<span class="built_in">endl</span>;  <span class="comment">//输出 8 20 2 1 5  </span></span><br><span class="line">   &#125;  </span><br><span class="line">   l.remove(<span class="number">2</span>);<span class="comment">//值为2的节点都删除  </span></span><br><span class="line">   l.pop_front();<span class="comment">//删除首部元素  </span></span><br><span class="line">   l.pop_back();<span class="comment">//删除尾部元素  </span></span><br><span class="line">   l.sort();<span class="comment">//排序  </span></span><br><span class="line">   l.unique();<span class="comment">//剔除重复元素， 3 8 1 1 1 3 1 ----&gt;  3 8 1 3 1  </span></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">   <span class="comment">//bitset 位集合容器  </span></span><br><span class="line">   <span class="built_in">bitset</span>&lt;10&gt;b; <span class="comment">//能容纳10个元素，也就是10位，默认都为0  </span></span><br><span class="line">   <span class="comment">//赋值  </span></span><br><span class="line">   b[<span class="number">1</span>] = <span class="number">1</span>;  </span><br><span class="line">   b[<span class="number">6</span>] = <span class="number">1</span>;  </span><br><span class="line">   b[<span class="number">9</span>] = <span class="number">1</span>;  </span><br><span class="line">   <span class="comment">//第0位是最低位，第9位是最高位  </span></span><br><span class="line">   <span class="keyword">for</span>(<span class="keyword">int</span> i = b.size() - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i --)  </span><br><span class="line">   &#123;  </span><br><span class="line">       <span class="built_in">cout</span> &lt;&lt; b[i] &lt;&lt; <span class="string">&quot; &quot;</span>;   <span class="comment">//输出 1001000010  </span></span><br><span class="line">   &#125;  </span><br><span class="line">   b.<span class="built_in">set</span>();<span class="comment">//全部重置为1  </span></span><br><span class="line">   b.<span class="built_in">set</span>(<span class="number">1</span>, <span class="number">1</span>);<span class="comment">//将第1位置为1  </span></span><br><span class="line">   b.<span class="built_in">set</span>(<span class="number">6</span>, <span class="number">1</span>);  </span><br><span class="line">   b.<span class="built_in">set</span>(<span class="number">9</span>, <span class="number">1</span>);  </span><br><span class="line">   b.reset(<span class="number">9</span>);<span class="comment">//将第9位置为0  </span></span><br><span class="line">   <span class="built_in">cout</span> &lt;&lt; b &lt;&lt;<span class="built_in">endl</span>;<span class="comment">// 和上面效果相同，也是输出1001000010</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://ccxiao5.github.io/2021/07/16/ACM%E5%B8%B8%E7%94%A8STL/" title="ACM常用STL" target="_blank" rel="external">https://ccxiao5.github.io/2021/07/16/ACM常用STL/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/ccxiao5" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/ccxiao5" target="_blank"><span class="text-dark">xiao5</span><small class="ml-1x">C++ engineer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2021/07/16/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91-%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E4%BD%BF%E7%94%A8/" title="微信小程序开发----微信开发者工具使用"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2021/07/16/STL%E4%B8%AD%E7%9A%84%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE/" title="STL中的二分查找"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/ccxiao5" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2021 Tigerwcheng
+        
+        <div class="publishby">
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
